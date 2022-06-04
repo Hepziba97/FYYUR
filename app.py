@@ -80,10 +80,10 @@ class Artist(db.Model):
 class Show(db.Model):
     __tablename__ = 'Show'
     id = db.Column(db.Integer, primary_key=True)
-    start_time = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)    # Start time required field
-    artist_id = db.Column(db.Integer, db.ForeignKey('Artist.id'), nullable=False)   # Foreign key is the tablename.pk
     venue_id = db.Column(db.Integer, db.ForeignKey('Venue.id'), nullable=False)
-
+    artist_id = db.Column(db.Integer, db.ForeignKey('Artist.id'), nullable=False)   
+    start_time = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)    
+    
     def __repr__(self):
         return f'<Artist ID: {self.artist_id}, Venue ID: {self.venue_id} ,Start Time: {self.start_time}>'
 
@@ -123,11 +123,11 @@ def venues():
   # TODO: replace with real venues data.
 
   data = []
-  registeredLocations = Venue.query.with_entities(Venue.state, Venue.city, Venue.name, Venue.phone).distinct().all()  
+  Locations = Venue.query.with_entities(Venue.state, Venue.city, Venue.name, Venue.phone).distinct().all()  
   
-  for registeredLocation in registeredLocations:
-    city = registeredLocation.city
-    state = registeredLocation.state
+  for Location in Locations:
+    city = Location.city
+    state = Location.state
     venues = Venue.query.filter_by(city=city, state=state).all()
 
     venuesDetails = []
@@ -170,9 +170,7 @@ def search_venues():
         "data": data
       }
 
-
-  
-      # return render_template('pages/search_venues.html', results=response, search_term=request.form.get('search_term', ''))
+        # return render_template('pages/search_venues.html', results=response, search_term=request.form.get('search_term', ''))
       return render_template('pages/search_venues.html', results=response, search_term=search_term)
 
 @app.route('/venues/<int:venue_id>')
@@ -294,8 +292,8 @@ def delete_venue(venue_id):
 def artists():
   # TODO: replace with real data returned from querying the database
   # replace with real data returned from querying the database
-  allArtist = Artist.query.with_entities(Artist.id, Artist.name).all()
-  data = [dict(zip(artist.keys(), artist)) for artist in allArtist]
+  everyArtist = Artist.query.with_entities(Artist.id, Artist.name).all()
+  data = [dict(zip(artist.keys(), artist)) for artist in everyArtist]
   return render_template('pages/artists.html', artists=data)
 
 @app.route('/artists/search', methods=['POST'])
@@ -377,7 +375,6 @@ def show_artist(artist_id):
 def edit_artist(artist_id):
     form = ArtistForm()
 
-    # populate form with fields from artist with ID <artist_id>
     artist = Artist.query.get(artist_id)
 
     if not artist: 
@@ -404,8 +401,6 @@ def edit_artist_submission(artist_id):
   # TODO: take values from the form submitted, and update existing
   # artist record with ID <artist_id> using the new attributes
   status = False
-
-  # artist record with ID <artist_id> using the new attributes
   artist = Artist.query.get(artist_id)
 
   if not artist: 
@@ -445,11 +440,7 @@ def edit_artist_submission(artist_id):
 
 @app.route('/venues/<int:venue_id>/edit', methods=['GET'])
 def edit_venue(venue_id):
-
-  # TODO: populate form with values from venue with ID <venue_id>
     form = VenueForm()
-
-    # populate form with values from venue with ID <venue_id>
     venue = Venue.query.get(venue_id)
 
     if not venue: 
