@@ -49,8 +49,7 @@ class Venue(db.Model):
     seeking_talent = db.Column(db.Boolean, default=False)
     seeking_description = db.Column(db.String(120))
     shows = db.relationship('Show', backref='venue', lazy=True)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-
+    
     def __repr__(self):
       return f'<Venue ID: {self.id}, Venue name: {self.name}>'  
 
@@ -70,9 +69,7 @@ class Artist(db.Model):
     seeking_venue = db.Column(db.Boolean, default=False)
     seeking_description = db.Column(db.String(120))
     shows = db.relationship('Show', backref='artist', lazy=True)    
-    created_on = db.Column(db.DateTime, default=datetime.utcnow)
     
-
     def __repr__(self):
         return f'<Artist ID: {self.id}, Artist name: {self.name}>'
 
